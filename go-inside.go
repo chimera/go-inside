@@ -5,7 +5,6 @@ import (
 	// "errors"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/tarm/goserial"
 	"io/ioutil"
 	"log"
 	"net/http"

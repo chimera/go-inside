@@ -12,8 +12,7 @@ import (
 	// "os"
 )
 
-// Open the users.json file
-// + Add/Remove/List users (extra!)
+// TODO: Add/Remove/List users (extra!)
 
 type User struct {
 	Name, Code string

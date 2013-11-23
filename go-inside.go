@@ -90,6 +90,10 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func RedirectHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 func main() {
 
 	// Create the webserver
@@ -97,6 +101,9 @@ func main() {
 
 	// Handle the checkin form.
 	r.HandleFunc("/", HomeHandler)
+
+	// Redirect people if they get to checking via GET.
+	r.HandleFunc("/checkin", RedirectHandler).Methods("GET")
 
 	// Listen for submissions of the checkin form
 	r.HandleFunc("/checkin", CheckinHandler).Methods("POST")

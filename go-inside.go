@@ -103,7 +103,7 @@ func main() {
 	http.Handle("/", r)
 
 	// Run the server.
-	port := ":3000"
-	log.Print("Starting server on port", port)
-	http.ListenAndServe(port, nil)
+	p := ":3000"
+	log.Print("Starting server on port", p)
+	http.ListenAndServe(p, nil)
 }

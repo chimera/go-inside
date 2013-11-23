@@ -45,21 +45,10 @@ func GetUsers() []User {
 
 func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Create a new serial configuration.
-	c := &serial.Config{Name: "/dev/tty.usbmodem", Baud: 9600}
+	// Make sure to return JSON.
+	// w.Header().Set("Content-Type", "applicaiton/json")
 
-	// Open a connection based on the serial config.
-	s, err := serial.OpenPort(c)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Write to the serial conneciton.
-	n, err := s.Write([]byte("1"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	// Fetch the list of authenticated users.
 	users := GetUsers()
 
 	// Get the code from the request.
@@ -71,22 +60,24 @@ func CheckinHandler(w http.ResponseWriter, r *http.Request) {
 		for _, user := range users {
 			if code == user.Code {
 				w.WriteHeader(http.StatusOK)
-				fmt.Fprintf(w, "Nice one %s!", user.Name)
+				// TODO: Return a struct converted to JSON.
+				fmt.Fprintf(w, `{ "message": "Nice one %s!" }`, user.Name)
 				return
 			}
 		}
 
 		// Code didn't match an authenticated user.
 		w.WriteHeader(http.StatusUnauthorized)
-		fmt.Fprintf(w, "Bad code there Hass!")
+
+		fmt.Fprintf(w, `{ "message": "Bad code there Hass!" }`)
 		log.Print("Invalid code input: ", code)
 		return
 	}
 
 	// No code passed in.
 	w.WriteHeader(http.StatusNotAcceptable)
-	fmt.Fprintf(w, "Gotta give me a code bro!")
-	log.Print("No code input: ", code)
+	fmt.Fprintf(w, `{ "message": "Gotta give me a code, bro!" }`)
+	log.Print("Missing code input: ", code)
 	return
 }
 

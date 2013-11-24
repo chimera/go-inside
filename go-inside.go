@@ -2,13 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	// "errors"
+	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"flag"
 	"os"
 	"strconv"
 )

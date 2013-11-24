@@ -9,9 +9,12 @@ import (
 	"log"
 	"net/http"
 	// "os"
+	"flag"
+	"strconv"
 )
 
-// TODO: Add/Remove/List users (extra!)
+var users_file = flag.String("users-file", "users.json", "The users JSON file to use.")
+var port = flag.Int("port", 3000, "The port to run on.")
 
 type User struct {
 	Name, Code string
@@ -28,7 +31,10 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 func GetUsers() []User {
 
 	// Read file contents into a list of bytes
-	outputAsBytes, err := ioutil.ReadFile("users.json")
+	outputAsBytes, err := ioutil.ReadFile(*users_file)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Parse the JSON in the file and return a slice of User structs.
 	var output []User
@@ -101,7 +107,7 @@ func main() {
 	http.Handle("/", r)
 
 	// Run the server.
-	p := ":3000"
+	p := ":" + strconv.Itoa(*port)
 	log.Print("Starting server on port", p)
 	http.ListenAndServe(p, nil)
 }

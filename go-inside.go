@@ -19,14 +19,6 @@ type User struct {
 	Name, Code string
 }
 
-// type apiResponse struct {
-// 	Users []User
-// }
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/index.html")
-}
-
 func GetUsers() []User {
 
 	// Check if the file does not exist yet.
@@ -72,6 +64,10 @@ func GetUsers() []User {
 	}
 
 	return output
+}
+
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/index.html")
 }
 
 func CheckinHandler(w http.ResponseWriter, r *http.Request) {

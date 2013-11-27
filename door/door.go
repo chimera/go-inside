@@ -2,9 +2,10 @@ package door
 
 import (
 	"fmt"
+	"github.com/chimera/go-inside/rs232"
 	"github.com/chimera/go-inside/users"
 	"log"
-	"rs232"
+	// "github.com/distributed/sers"
 )
 
 type DoorLock struct {
@@ -44,6 +45,7 @@ func (d *DoorLock) Connect() {
 
 	log.Printf("Opened serial port %s\n", p.String())
 
+	// Attach a reference of the serial port to the DoorLock struct.
 	d.Serial = *p
 }
 

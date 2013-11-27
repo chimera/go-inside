@@ -5,7 +5,6 @@ import (
 	"github.com/chimera/go-inside/users"
 	"log"
 	"rs232"
-	// "time"
 )
 
 type DoorLock struct {

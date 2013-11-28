@@ -1,10 +1,12 @@
 package door
 
 import (
+	"log"
+
 	"code.google.com/p/gopass"
+
 	"github.com/chimera/go-inside/rs232"
 	"github.com/chimera/go-inside/users"
-	"log"
 )
 
 type DoorLock struct {

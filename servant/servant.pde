@@ -10,9 +10,7 @@ void setup() {
 void loop() {
   while (Serial.available() > 0) {
     int val = Serial.parseInt();
-    Serial.write("val received");
     if (val == 1) {
-      Serial.write("unlock");
       unlock();
     }
   }

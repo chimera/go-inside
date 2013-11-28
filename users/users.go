@@ -13,6 +13,14 @@ type User struct {
 	Code string `json:"code"`
 }
 
+func (u *User) String() string {
+	return fmt.Sprintf("%s (#%s)", string(u.Name), string(u.Code))
+}
+
+func logAccess(u User) {
+	log.Printf("Logged in %s", u.String())
+}
+
 func AuthenticateCode(code string, users_file string) error {
 
 	// Fetch the list of authorized users.
@@ -21,6 +29,7 @@ func AuthenticateCode(code string, users_file string) error {
 	// Loop through all the users to see if any have a matching code.
 	for _, user := range users {
 		if code == user.Code {
+			logAccess(user)
 			return nil
 		}
 	}

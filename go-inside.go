@@ -18,8 +18,12 @@ func main() {
 	// Parse any command line flags.
 	flag.Parse()
 
-	// Connect to the door lock.
-	door := &door.DoorLock{Baud: *baud, SerialPortPath: *port_path, UsersFile: *users_file}
+	// Create a new connection to the door lock
+	door := &door.DoorLock{
+		Baud:           *baud,
+		SerialPortPath: *port_path,
+		UsersFile:      *users_file,
+	}
 
 	// Handle inputting of user RFID codes
 	door.Listen()

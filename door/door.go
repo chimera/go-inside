@@ -51,7 +51,6 @@ func (d *DoorLock) Connect() {
 }
 
 func (d *DoorLock) Unlock() {
-	log.Println("Unlocking door...")
 	_, err := d.Serial.Write([]byte("1"))
 	if err != nil {
 		log.Fatalf("Could not unlock door, with error: %s", err)
@@ -86,7 +85,6 @@ func (d *DoorLock) Listen() {
 				log.Println(err.Error())
 			} else {
 				// Log them in if their code is valid.
-				log.Println("Congrats, your code is valid, come on in!")
 				d.Unlock()
 			}
 		}

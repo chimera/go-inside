@@ -18,7 +18,7 @@ func (u *User) String() string {
 }
 
 func logAccess(u User) {
-	log.Printf("Logged in %s", u.String())
+	log.Printf("Authenticated: %s", u.String())
 }
 
 func AuthenticateCode(code string, users_file string) error {

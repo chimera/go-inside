@@ -20,7 +20,6 @@ func main() {
 
 	// Connect to the door lock.
 	door := &door.DoorLock{Baud: *baud, SerialPortPath: *port_path, UsersFile: *users_file}
-	door.Connect()
 
 	// Handle inputting of user RFID codes
 	door.Listen()

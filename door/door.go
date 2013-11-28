@@ -65,6 +65,9 @@ func (d *DoorLock) Disconnect() {
 
 func (d *DoorLock) Listen() {
 
+	// Make sure to connect to the door lock.
+	d.Connect()
+
 	// Listen for incoming RFID codes.
 	for {
 		log.Print("Please input your RFID code for access: ")

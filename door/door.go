@@ -1,11 +1,10 @@
 package door
 
 import (
-	"fmt"
+	"code.google.com/p/gopass"
 	"github.com/chimera/go-inside/rs232"
 	"github.com/chimera/go-inside/users"
 	"log"
-	// "github.com/distributed/sers"
 )
 
 type DoorLock struct {
@@ -70,23 +69,24 @@ func (d *DoorLock) Listen() {
 
 	// Listen for incoming RFID codes.
 	for {
-		log.Print("Please input your RFID code for access: ")
 
-		// Check for incoming RFID codes.
+		// Prompt for an RFID code.
 		var code string
-		_, err := fmt.Scan(&code)
+		code, err := gopass.GetPass("Please input your RFID code for access: ")
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// If a code is received, send it to get authenticated.
-		err = users.AuthenticateCode(code, d.UsersFile)
-		if err != nil {
-			log.Println(err.Error())
-		} else {
-			// Log them in if their code is valid.
-			log.Printf("Congrats, your code '%s' is valid, come on in!\n", code)
-			d.Unlock()
+		if code != "" {
+			err = users.AuthenticateCode(code, d.UsersFile)
+			if err != nil {
+				log.Println(err.Error())
+			} else {
+				// Log them in if their code is valid.
+				log.Println("Congrats, your code is valid, come on in!")
+				d.Unlock()
+			}
 		}
 	}
 

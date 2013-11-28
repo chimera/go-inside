@@ -14,7 +14,7 @@ type User struct {
 }
 
 func (u *User) String() string {
-	return fmt.Sprintf("%s (#%s)", string(u.Name), string(u.Code))
+	return fmt.Sprint(string(u.Name))
 }
 
 func logAccess(u User) {

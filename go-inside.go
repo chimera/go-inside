@@ -1,4 +1,3 @@
-// +build linux,darwin
 // The main package handles connecting to the door lock and receiving various
 // command line flags, including the JSON users database file, serial port location
 // and the baud rate.

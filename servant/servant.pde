@@ -1,5 +1,5 @@
 const int LOCK = 7;
-const int DELAY = 1000;
+const int DELAY = 8000;
 const int BAUD = 19200;
 
 void setup() {

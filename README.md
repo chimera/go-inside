@@ -22,6 +22,36 @@ After that, run the `go-inside` binary:
 
 The `port` will be the location of your Arduino serial port connection. On Raspberry Pi, it usually starts with `/dev/ttyACM`. On OSX, it is usually at `/dev/tty.usbmodem`.
 
+<http://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html>
+
+Create a file at `/etc/init.d/go-inside`:
+
+    #! /bin/sh
+    case "$1" in
+      start)
+        echo "Starting go-inside"
+        /usr/local/bin/go-inside
+        ;;
+      stop)
+        echo "Stopping go-inside"
+        killall go-inside
+        ;;
+      *)
+        echo "Usage: /etc/init.d/go-inside {start|stop}"
+        exit 1
+        ;;
+    esac
+
+    exit 0
+
+Make the script executable:
+
+    sudo chmod 755 /etc/init.d/go-inside
+
+The register the script to run when the system starts up/shuts down:
+
+    sudo update-rc.d go-inside defaults
+
 ## Development
 
 To build the package for ARM based systems (such as the Raspberry Pi) while on another platform (OSX, Windows), run the following:

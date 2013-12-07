@@ -42,10 +42,10 @@ func (d *DoorLock) Unlock() error {
 			continue
 		}
 
-		log.Printf("Opened serial port %s\n", p.String())
-
 		// Attach a reference of the serial port to the DoorLock struct.
 		d.Serial = *p
+
+		log.Printf("Opened serial port %s\n", d.Serial.String())
 
 		// Unlock door
 		_, err = d.Serial.Write([]byte("1"))
@@ -91,6 +91,7 @@ func (d *DoorLock) Listen() {
 				if err != nil {
 					log.Fatal(err)
 				}
+				defer d.Disconnect()
 			}
 		}
 	}

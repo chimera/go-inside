@@ -20,6 +20,13 @@ func main() {
 	door := &door.DoorLock{
 		Baud:      *baud,
 		UsersFile: *users_file,
+		PossiblePorts: []string{
+			"/dev/ttyACM0",
+			"/dev/ttyACM1",
+			"/dev/ttyACM2",
+			"/dev/tty.usbmodem411",
+			"/dev/tty.usbmodem621",
+		},
 	}
 
 	// Handle inputting of user RFID codes

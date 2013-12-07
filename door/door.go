@@ -11,24 +11,16 @@ import (
 )
 
 type DoorLock struct {
-	Serial    rs232.Port
-	Baud      int
-	UsersFile string
+	Serial        rs232.Port
+	Baud          int
+	UsersFile     string
+	PossiblePorts []string // Possible ports that the Arduino could be on...
 }
 
 func (d *DoorLock) Unlock() error {
 
-	// TODO: This is way too hack, don't hardcode this crap.
-	var ports = []string{
-		"/dev/ttyACM0",
-		"/dev/ttyACM1",
-		"/dev/ttyACM2",
-		"/dev/tty.usbmodem411",
-		"/dev/tty.usbmodem621",
-	}
-
 	// Loop over the available ports and try to connect in order.
-	for _, port := range ports {
+	for _, port := range d.PossiblePorts {
 
 		// Configure the serial connection.
 		options := rs232.Options{

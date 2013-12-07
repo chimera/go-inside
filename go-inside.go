@@ -9,8 +9,8 @@ import (
 )
 
 // Available command line flags with sane-ish defaults.
-var users_file = flag.String("db", "users.json", "The users JSON file to use.")
-var port_path = flag.String("port", "/dev/tty.usbmodem621", "The serial port that the Arduino is running on.")
+var users_file = flag.String("db", "/home/pi/users.json", "The users JSON file to use.")
+var port_path = flag.String("port", "/dev/ttyACM0", "The serial port that the Arduino is running on.")
 var baud = flag.Int("baud", 19200, "The baudrate to connect to the serial port with.")
 
 func main() {
@@ -26,4 +26,7 @@ func main() {
 
 	// Handle inputting of user RFID codes
 	door.Listen()
+
+	// Make sure to disconnect from the door when we're done.
+	defer door.Disconnect()
 }

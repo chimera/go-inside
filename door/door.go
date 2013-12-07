@@ -11,9 +11,9 @@ import (
 )
 
 type DoorLock struct {
-	Serial         rs232.Port
-	Baud           int
-	UsersFile      string
+	Serial    rs232.Port
+	Baud      int
+	UsersFile string
 }
 
 func (d *DoorLock) Unlock() error {

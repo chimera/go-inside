@@ -10,7 +10,6 @@ import (
 
 // Available command line flags with sane-ish defaults.
 var users_file = flag.String("db", "/home/pi/users.json", "The users JSON file to use.")
-var port_path = flag.String("port", "/dev/ttyACM0", "The serial port that the Arduino is running on.")
 var baud = flag.Int("baud", 19200, "The baudrate to connect to the serial port with.")
 
 func main() {
@@ -19,9 +18,8 @@ func main() {
 
 	// Create a new connection to the door lock
 	door := &door.DoorLock{
-		Baud:           *baud,
-		SerialPortPath: *port_path,
-		UsersFile:      *users_file,
+		Baud:      *baud,
+		UsersFile: *users_file,
 	}
 
 	// Handle inputting of user RFID codes

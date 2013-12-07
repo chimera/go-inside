@@ -1,6 +1,7 @@
 package door
 
 import (
+	"fmt"
 	"log"
 
 	"code.google.com/p/gopass"
@@ -12,50 +13,73 @@ import (
 type DoorLock struct {
 	Serial         rs232.Port
 	Baud           int
-	SerialPortPath string
 	UsersFile      string
 }
 
-func (d *DoorLock) Connect() {
-	log.Println("Connecting to door lock via serial...")
+func (d *DoorLock) Unlock() error {
 
-	// Configure the serial connection.
-	options := rs232.Options{
-		BitRate:  uint32(d.Baud),
-		DataBits: 8,
-		StopBits: 1,
-		Parity:   rs232.PARITY_NONE,
-		Timeout:  0,
+	// TODO: This is way too hack, don't hardcode this crap.
+	var ports = []string{
+		"/dev/ttyACM0",
+		"/dev/ttyACM1",
+		"/dev/ttyACM2",
+		"/dev/tty.usbmodem411",
+		"/dev/tty.usbmodem621",
 	}
 
-	p, err := rs232.Open(d.SerialPortPath, options)
-	if err != nil {
-		log.Printf("rs232.Open(): %s\n", err)
-		e := err.(*rs232.Error)
-		errType := ""
-		switch e.Code {
-		case rs232.ERR_DEVICE:
-			errType = "ERR_DEVICE"
-		case rs232.ERR_ACCESS:
-			errType = "ERR_ACCESS"
-		case rs232.ERR_PARAMS:
-			errType = "ERR_PARAMS"
+	// Loop over the available ports and try to connect in order.
+	for _, port := range ports {
+
+		// Configure the serial connection.
+		options := rs232.Options{
+			BitRate:  uint32(d.Baud),
+			DataBits: 8,
+			StopBits: 1,
+			Parity:   rs232.PARITY_NONE,
+			Timeout:  0,
 		}
-		log.Fatalf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
+
+		// Open a connection to the serial port.
+		p, err := rs232.Open(port, options)
+
+		// Handle connection errors.
+		if err != nil {
+			log.Printf("rs232.Open(): %s\n", err)
+			e := err.(*rs232.Error)
+			errType := ""
+			switch e.Code {
+			case rs232.ERR_DEVICE:
+				errType = "ERR_DEVICE"
+			case rs232.ERR_ACCESS:
+				errType = "ERR_ACCESS"
+			case rs232.ERR_PARAMS:
+				errType = "ERR_PARAMS"
+			}
+			// log.Fatalf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
+			// return fmt.Errorf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
+			log.Printf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
+			log.Printf("Could not connect to port %s\n", port)
+			continue
+		}
+
+		log.Printf("Opened serial port %s\n", p.String())
+
+		// Attach a reference of the serial port to the DoorLock struct.
+		d.Serial = *p
+
+		// Unlock door
+		_, err = d.Serial.Write([]byte("1"))
+		if err != nil {
+			return fmt.Errorf("Could not unlock door, with error: %s", err)
+		}
+		log.Println("Door unlocked!")
+
+		// If we successfully connect and write to the port, finish the loop.
+		return nil
 	}
 
-	log.Printf("Opened serial port %s\n", p.String())
-
-	// Attach a reference of the serial port to the DoorLock struct.
-	d.Serial = *p
-}
-
-func (d *DoorLock) Unlock() {
-	_, err := d.Serial.Write([]byte("1"))
-	if err != nil {
-		log.Fatalf("Could not unlock door, with error: %s", err)
-	}
-	log.Println("Door unlocked!")
+	// None of the expected ports could be connected to.
+	return fmt.Errorf("Failed to connect to available ports!")
 }
 
 func (d *DoorLock) Disconnect() {
@@ -65,8 +89,6 @@ func (d *DoorLock) Disconnect() {
 
 func (d *DoorLock) Listen() {
 
-	// Make sure to connect to the door lock.
-	d.Connect()
 
 	// Listen for incoming RFID codes.
 	for {
@@ -85,11 +107,11 @@ func (d *DoorLock) Listen() {
 				log.Println(err.Error())
 			} else {
 				// Log them in if their code is valid.
-				d.Unlock()
+				err := d.Unlock()
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}
-
-	// Make sure to disconnect from the door when we're done.
-	defer d.Disconnect()
 }

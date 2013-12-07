@@ -36,16 +36,6 @@ func (d *DoorLock) Unlock() error {
 
 		// Handle connection errors.
 		if err != nil {
-			e := err.(*rs232.Error)
-			errType := ""
-			switch e.Code {
-			case rs232.ERR_DEVICE:
-				errType = "ERR_DEVICE"
-			case rs232.ERR_ACCESS:
-				errType = "ERR_ACCESS"
-			case rs232.ERR_PARAMS:
-				errType = "ERR_PARAMS"
-			}
 			// log.Fatalf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
 			// return fmt.Errorf("Failed to connect to serial port with error code: %d (%s)\n", e.Code, errType)
 			log.Printf("Could not connect to port %s\n", port)
